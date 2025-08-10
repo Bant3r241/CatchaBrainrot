@@ -1,112 +1,94 @@
-local lg = love.graphics
+-- Create the ScreenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
-local gui = {
-    width = 600,
-    height = 400,
-    tabs = {
-        {name = "Discord Tab", icon = "D"},
-        {name = "Brainrot Management", icon = "B"},
-        {name = "Player Management", icon = "P"},
-        {name = "Player Tab", icon = "P"}
-    },
-    toggles = {
-        {name = "Aimbot with Webslinger", state = false},
-        {name = "Anti Traps", state = false},
-        {name = "Speed Boost req.", state = false}
-    },
-    activeTab = 1
-}
+-- Create the main frame (background with transparency)
+local mainFrame = Instance.new("Frame")
+mainFrame.Size = UDim2.new(0, 300, 0, 500)  -- Adjust size as needed
+mainFrame.Position = UDim2.new(0.5, -150, 0.5, -250)  -- Center the frame
+mainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+mainFrame.BackgroundTransparency = 0.5  -- Make it semi-transparent
+mainFrame.BorderSizePixel = 0
+mainFrame.Parent = screenGui
 
-function love.load()
-    love.window.setMode(gui.width, gui.height, {resizable=false})
-    love.window.setTitle("Pulsar X / Steal A Brainrot")
+-- Create the side menu frame (vertical menu)
+local sideMenu = Instance.new("Frame")
+sideMenu.Size = UDim2.new(0, 75, 1, 0)
+sideMenu.Position = UDim2.new(0, 0, 0, 0)
+sideMenu.BackgroundColor3 = Color3.fromRGB(30, 30, 30)  -- Dark color for the menu
+sideMenu.BackgroundTransparency = 0.6
+sideMenu.BorderSizePixel = 0
+sideMenu.Parent = mainFrame
+
+-- Create a list of tabs for the menu
+local tabs = {"Discord Tab", "Brainrot Management", "Player Management", "Player Tab"}
+local tabButtons = {}
+
+for i, tab in ipairs(tabs) do
+    local button = Instance.new("TextButton")
+    button.Size = UDim2.new(1, 0, 0, 40)  -- Adjust size as needed
+    button.Position = UDim2.new(0, 0, 0, (i-1) * 40)
+    button.Text = tab
+    button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    button.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    button.BackgroundTransparency = 0.6
+    button.BorderSizePixel = 0
+    button.Font = Enum.Font.GothamBold
+    button.TextSize = 16
+    button.Parent = sideMenu
+    table.insert(tabButtons, button)
 end
 
-function love.draw()
-    -- Draw background (simulating the textured surface)
-    lg.setColor(0.8, 0.8, 0.75)
-    lg.rectangle("fill", 0, 0, gui.width, gui.height)
-    
-    -- Draw main window
-    lg.setColor(0.15, 0.15, 0.15)
-    lg.rectangle("fill", 20, 20, gui.width - 40, gui.height - 40, 5)
-    
-    -- Draw title bar
-    lg.setColor(0.1, 0.1, 0.1)
-    lg.rectangle("fill", 20, 20, gui.width - 40, 30, 5, 5, 0, 0)
-    
-    -- Draw window controls
-    lg.setColor(0.7, 0.7, 0.7)
-    lg.print("X", gui.width - 40, 25)
-    lg.print("□", gui.width - 60, 25)
-    lg.print("_", gui.width - 80, 25)
-    
-    -- Draw title
-    lg.setColor(1, 1, 1)
-    lg.print("Pulsar X / Steal A Brainrot", 30, 25)
-    
-    -- Draw tab area
-    lg.setColor(0.2, 0.2, 0.2)
-    lg.rectangle("fill", 30, 60, 180, gui.height - 90)
-    
-    -- Draw tabs
-    for i, tab in ipairs(gui.tabs) do
-        if i == gui.activeTab then
-            lg.setColor(0.3, 0.3, 0.3)
-            lg.rectangle("fill", 30, 60 + (i-1)*50, 180, 50)
-        end
-        
-        lg.setColor(1, 1, 1)
-        lg.print(tab.icon, 40, 75 + (i-1)*50)
-        lg.print(tab.name, 70, 75 + (i-1)*50)
-    end
-    
-    -- Draw toggle area
-    lg.setColor(0.25, 0.25, 0.25)
-    lg.rectangle("fill", 230, 60, gui.width - 270, gui.height - 90)
-    
-    -- Draw toggles
-    for i, toggle in ipairs(gui.toggles) do
-        lg.setColor(1, 1, 1)
-        lg.print(toggle.name, 250, 80 + (i-1)*40)
-        
-        -- Toggle switch
-        lg.setColor(0.4, 0.4, 0.4)
-        lg.rectangle("fill", gui.width - 100, 75 + (i-1)*40, 60, 25, 12)
-        
-        if toggle.state then
-            lg.setColor(0, 0.8, 0)
-            lg.rectangle("fill", gui.width - 85, 78 + (i-1)*40, 30, 19, 10)
+-- Create the content frame for toggles (right side of the UI)
+local contentFrame = Instance.new("Frame")
+contentFrame.Size = UDim2.new(1, -75, 1, 0)
+contentFrame.Position = UDim2.new(0, 75, 0, 0)
+contentFrame.BackgroundTransparency = 1  -- Transparent background
+contentFrame.Parent = mainFrame
+
+-- Create toggles for features
+local toggleLabels = {"Aimbot with Webslinger", "Anti Traps", "Anti Hit", "Speed Boost req", "Jump Power", "Jump Power Strength"}
+local toggles = {}
+
+for i, label in ipairs(toggleLabels) do
+    local toggleFrame = Instance.new("Frame")
+    toggleFrame.Size = UDim2.new(1, 0, 0, 40)
+    toggleFrame.Position = UDim2.new(0, 0, 0, (i-1) * 50)
+    toggleFrame.BackgroundTransparency = 0.5
+    toggleFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    toggleFrame.BorderSizePixel = 0
+    toggleFrame.Parent = contentFrame
+
+    local toggleLabel = Instance.new("TextLabel")
+    toggleLabel.Size = UDim2.new(0, 180, 1, 0)
+    toggleLabel.Position = UDim2.new(0, 10, 0, 0)
+    toggleLabel.Text = label
+    toggleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    toggleLabel.BackgroundTransparency = 1
+    toggleLabel.Font = Enum.Font.Gotham
+    toggleLabel.TextSize = 14
+    toggleLabel.Parent = toggleFrame
+
+    local toggleSwitch = Instance.new("TextButton")
+    toggleSwitch.Size = UDim2.new(0, 40, 0, 20)
+    toggleSwitch.Position = UDim2.new(1, -50, 0, 10)
+    toggleSwitch.Text = "OFF"
+    toggleSwitch.TextColor3 = Color3.fromRGB(255, 255, 255)
+    toggleSwitch.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    toggleSwitch.BackgroundTransparency = 0.5
+    toggleSwitch.BorderSizePixel = 0
+    toggleSwitch.Font = Enum.Font.Gotham
+    toggleSwitch.TextSize = 12
+    toggleSwitch.Parent = toggleFrame
+
+    -- Toggle switch functionality
+    toggleSwitch.MouseButton1Click:Connect(function()
+        if toggleSwitch.Text == "OFF" then
+            toggleSwitch.Text = "ON"
+            toggleSwitch.BackgroundColor3 = Color3.fromRGB(0, 255, 0)  -- Green for ON
         else
-            lg.setColor(0.8, 0, 0)
-            lg.rectangle("fill", gui.width - 100, 78 + (i-1)*40, 30, 19, 10)
+            toggleSwitch.Text = "OFF"
+            toggleSwitch.BackgroundColor3 = Color3.fromRGB(255, 0, 0)  -- Red for OFF
         end
-    end
-end
-
-function love.mousepressed(x, y, button)
-    if button == 1 then
-        -- Check tab clicks
-        for i, tab in ipairs(gui.tabs) do
-            if x >= 30 and x <= 210 and y >= 60 + (i-1)*50 and y <= 110 + (i-1)*50 then
-                gui.activeTab = i
-            end
-        end
-        
-        -- Check toggle clicks
-        for i, toggle in ipairs(gui.toggles) do
-            if x >= gui.width - 100 and x <= gui.width - 40 and y >= 75 + (i-1)*40 and y <= 100 + (i-1)*40 then
-                toggle.state = not toggle.state
-            end
-        end
-        
-        -- Check window controls
-        if x >= gui.width - 80 and x <= gui.width - 70 and y >= 25 and y <= 45 then
-            -- Minimize (not functional in this example)
-        elseif x >= gui.width - 60 and x <= gui.width - 50 and y >= 25 and y <= 45 then
-            -- Maximize (not functional in this example)
-        elseif x >= gui.width - 40 and x <= gui.width - 30 and y >= 25 and y <= 45 then
-            love.event.quit()
-        end
-    end
+    end)
 end
