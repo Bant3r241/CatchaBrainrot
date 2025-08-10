@@ -1,93 +1,99 @@
-local player = game.Players.LocalPlayer
-local screenGui = Instance.new("ScreenGui")
-screenGui.Parent = player:WaitForChild("PlayerGui")
+-- Create the main screen GUI
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "xlur_GUI"
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
--- Create main frame (black background)
-local mainFrame = Instance.new("Frame")
-mainFrame.Size = UDim2.new(0, 200, 0, 400)
-mainFrame.Position = UDim2.new(0, 0, 0, 0)
-mainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-mainFrame.Parent = screenGui
+-- Create the background frame (black)
+local MainFrame = Instance.new("Frame")
+MainFrame.Name = "MainFrame"
+MainFrame.Size = UDim2.new(0, 300, 0, 500)
+MainFrame.Position = UDim2.new(0, 50, 0, 50)
+MainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+MainFrame.Parent = ScreenGui
+MainFrame.Active = true
+MainFrame.Draggable = true  -- This makes the GUI draggable
 
--- Create tabs container
-local tabContainer = Instance.new("Frame")
-tabContainer.Size = UDim2.new(1, 0, 0, 50)
-tabContainer.Position = UDim2.new(0, 0, 0, 0)
-tabContainer.BackgroundTransparency = 1
-tabContainer.Parent = mainFrame
+-- Title Label
+local TitleLabel = Instance.new("TextLabel")
+TitleLabel.Size = UDim2.new(1, 0, 0, 40)
+TitleLabel.BackgroundTransparency = 1
+TitleLabel.Text = "xlur ┃ Catch A Brainrot"
+TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TitleLabel.TextSize = 24
+TitleLabel.TextXAlignment = Enum.TextXAlignment.Center
+TitleLabel.TextYAlignment = Enum.TextYAlignment.Center
+TitleLabel.Parent = MainFrame
 
--- Create Tab buttons
-local mainTabButton = Instance.new("TextButton")
-mainTabButton.Size = UDim2.new(0.5, 0, 1, 0)
-mainTabButton.Text = "Main"
-mainTabButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-mainTabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-mainTabButton.Parent = tabContainer
+-- Create the Tab buttons container (left side)
+local TabContainer = Instance.new("Frame")
+TabContainer.Size = UDim2.new(0, 80, 1, 0)
+TabContainer.Position = UDim2.new(0, 0, 0, 0)
+TabContainer.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+TabContainer.Parent = MainFrame
 
-local miscTabButton = Instance.new("TextButton")
-miscTabButton.Size = UDim2.new(0.5, 0, 1, 0)
-miscTabButton.Position = UDim2.new(0.5, 0, 0, 0)
-miscTabButton.Text = "Misc"
-miscTabButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-miscTabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-miscTabButton.Parent = tabContainer
+-- Main Tab Button
+local MainTabButton = Instance.new("TextButton")
+MainTabButton.Size = UDim2.new(1, 0, 0, 40)
+MainTabButton.Position = UDim2.new(0, 0, 0, 0)
+MainTabButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+MainTabButton.Text = "Main"
+MainTabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+MainTabButton.TextSize = 18
+MainTabButton.Parent = TabContainer
 
--- Create pages (Main and Misc)
-local mainPage = Instance.new("Frame")
-mainPage.Size = UDim2.new(1, 0, 1, -50) -- fill remaining space
-mainPage.Position = UDim2.new(0, 0, 0, 50)
-mainPage.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-mainPage.Visible = true
-mainPage.Parent = mainFrame
+-- Misc Tab Button
+local MiscTabButton = Instance.new("TextButton")
+MiscTabButton.Size = UDim2.new(1, 0, 0, 40)
+MiscTabButton.Position = UDim2.new(0, 0, 0, 40)
+MiscTabButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+MiscTabButton.Text = "Misc"
+MiscTabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+MiscTabButton.TextSize = 18
+MiscTabButton.Parent = TabContainer
 
-local miscPage = Instance.new("Frame")
-miscPage.Size = UDim2.new(1, 0, 1, -50)
-miscPage.Position = UDim2.new(0, 0, 0, 50)
-miscPage.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-miscPage.Visible = false
-miscPage.Parent = mainFrame
+-- Content Frames for Main and Misc tabs
+local MainTabFrame = Instance.new("Frame")
+MainTabFrame.Size = UDim2.new(1, -80, 1, 0)
+MainTabFrame.Position = UDim2.new(0, 80, 0, 0)
+MainTabFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+MainTabFrame.Visible = true
+MainTabFrame.Parent = MainFrame
 
--- Switch between tabs
-mainTabButton.MouseButton1Click:Connect(function()
-    mainPage.Visible = true
-    miscPage.Visible = false
+local MiscTabFrame = Instance.new("Frame")
+MiscTabFrame.Size = UDim2.new(1, -80, 1, 0)
+MiscTabFrame.Position = UDim2.new(0, 80, 0, 0)
+MiscTabFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+MiscTabFrame.Visible = false
+MiscTabFrame.Parent = MainFrame
+
+-- Tab Switching Logic
+MainTabButton.MouseButton1Click:Connect(function()
+    MainTabFrame.Visible = true
+    MiscTabFrame.Visible = false
 end)
 
-miscTabButton.MouseButton1Click:Connect(function()
-    mainPage.Visible = false
-    miscPage.Visible = true
+MiscTabButton.MouseButton1Click:Connect(function()
+    MainTabFrame.Visible = false
+    MiscTabFrame.Visible = true
 end)
 
--- Make GUI movable
-local dragging = false
-local dragStart = nil
-local startPos = nil
+-- Example Button in Main Tab
+local MainButton = Instance.new("TextButton")
+MainButton.Size = UDim2.new(0, 200, 0, 40)
+MainButton.Position = UDim2.new(0, 50, 0, 100)
+MainButton.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+MainButton.Text = "Main Button"
+MainButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+MainButton.TextSize = 18
+MainButton.Parent = MainTabFrame
 
--- Function to update position while dragging
-local function updatePosition(input)
-    local delta = input.Position - dragStart
-    mainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-end
-
--- Detect when the user starts dragging
-tabContainer.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        dragging = true
-        dragStart = input.Position
-        startPos = mainFrame.Position
-    end
-end)
-
--- Detect when the user stops dragging
-tabContainer.InputEnded:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        dragging = false
-    end
-end)
-
--- Update the position as the user drags
-game:GetService("UserInputService").InputChanged:Connect(function(input)
-    if dragging then
-        updatePosition(input)
-    end
-end)
+-- Example Button in Misc Tab
+local MiscButton = Instance.new("TextButton")
+MiscButton.Size = UDim2.new(0, 200, 0, 40)
+MiscButton.Position = UDim2.new(0, 50, 0, 100)
+MiscButton.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+MiscButton.Text = "Misc Button"
+MiscButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+MiscButton.TextSize = 18
+MiscButton.Parent = MiscTabFrame
