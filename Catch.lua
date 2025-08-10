@@ -4,8 +4,8 @@ screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
 -- Create the main frame (background with transparency)
 local mainFrame = Instance.new("Frame")
-mainFrame.Size = UDim2.new(0, 300, 0, 500)  -- Adjust size as needed
-mainFrame.Position = UDim2.new(0.5, -150, 0.5, -250)  -- Center the frame
+mainFrame.Size = UDim2.new(0.6, 0, 0.8, 0)  -- Adjust size to 60% width and 80% height of the screen
+mainFrame.Position = UDim2.new(0.2, 0, 0.1, 0)  -- Center the frame
 mainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 mainFrame.BackgroundTransparency = 0.5  -- Make it semi-transparent
 mainFrame.BorderSizePixel = 0
@@ -13,7 +13,7 @@ mainFrame.Parent = screenGui
 
 -- Create the side menu frame (vertical menu)
 local sideMenu = Instance.new("Frame")
-sideMenu.Size = UDim2.new(0, 75, 1, 0)
+sideMenu.Size = UDim2.new(0, 100, 1, 0)  -- Adjust the side menu size to fit mobile screens better
 sideMenu.Position = UDim2.new(0, 0, 0, 0)
 sideMenu.BackgroundColor3 = Color3.fromRGB(30, 30, 30)  -- Dark color for the menu
 sideMenu.BackgroundTransparency = 0.6
@@ -41,8 +41,8 @@ end
 
 -- Create the content frame for toggles (right side of the UI)
 local contentFrame = Instance.new("Frame")
-contentFrame.Size = UDim2.new(1, -75, 1, 0)
-contentFrame.Position = UDim2.new(0, 75, 0, 0)
+contentFrame.Size = UDim2.new(1, -100, 1, 0)
+contentFrame.Position = UDim2.new(0, 100, 0, 0)
 contentFrame.BackgroundTransparency = 1  -- Transparent background
 contentFrame.Parent = mainFrame
 
