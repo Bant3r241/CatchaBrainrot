@@ -55,12 +55,12 @@ if game.PlaceId == 75418531859354 then
     MainTab:AddToggle({Name = "Fuse All With Relic", Default = false, Callback = function(v) _G.FuseAll = v if v then FuseAll() end end})
     MainTab:AddToggle({Name = "Sell All", Default = false, Callback = function(v) _G.SellAll = v if v then SellAll() end end})
 
-    local RelicsTab = Window:MakeTab({Name = "Relics", Icon = "rbxassetid://1234567", PremiumOnly = false})
+    local RelicsTab = Window:MakeTab({Name = "Relics", Icon = "rbxassetid://4299432428", PremiumOnly = false})
     RelicsTab:AddToggle({Name = "Auto Buy Sprout", Default = false, Callback = function(v) _G.AutoBuySprout = v if v then AutoBuyRelic("Sprout") end end})
     RelicsTab:AddToggle({Name = "Auto Buy Sun", Default = false, Callback = function(v) _G.AutoBuySun = v if v then AutoBuyRelic("Sun") end end})
     RelicsTab:AddToggle({Name = "Auto Buy Space", Default = false, Callback = function(v) _G.AutoBuySpace = v if v then AutoBuyRelic("Space") end end})
 
-    local BaitTab = Window:MakeTab({Name = "Bait", Icon = "rbxassetid://2345678", PremiumOnly = false}) -- Replace icon id as you want
+    local BaitTab = Window:MakeTab({Name = "Bait", Icon = "rbxassetid://4299432428", PremiumOnly = false}) 
     BaitTab:AddToggle({Name = "Auto Buy Fries", Default = false, Callback = function(v) _G.AutoBuyFries = v if v then AutoBuyBait("Fries") end end})
     BaitTab:AddToggle({Name = "Auto Buy Banana", Default = false, Callback = function(v) _G.AutoBuyBanana = v if v then AutoBuyBait("Banana") end end})
     BaitTab:AddToggle({Name = "Auto Buy Cheese", Default = false, Callback = function(v) _G.AutoBuyCheese = v if v then AutoBuyBait("Cheese") end end})
@@ -72,3 +72,4 @@ if game.PlaceId == 75418531859354 then
 end
 
 OrionLib:Init()
+
