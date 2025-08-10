@@ -1,6 +1,6 @@
 if game.PlaceId == 75418531859354 then
     local OrionLib = loadstring(game:HttpGet('https://raw.githubusercontent.com/jensonhirst/Orion/main/source'))()
-    local Window = OrionLib:MakeWindow({Name="Xlur │ Catch A Brainrot",HidePremium=false,IntroEnabled=false,IntroText="Xlur",SaveConfig=true,ConfigFolder="XlurConfig"})
+    local Window = OrionLib:MakeWindow({Name="ABI │ Catch A Brainrot",HidePremium=false,IntroEnabled=false,IntroText="ABI",SaveConfig=true,ConfigFolder="XlurConfig"})
 
     _G.autoClaim,_G.FuseAll,_G.SellAll,_G.CollectAll=false,false,false
     _G.AutoBuySprout,_G.AutoBuySun,_G.AutoBuySpace=false,false,false
@@ -107,3 +107,4 @@ end
 end
 
 OrionLib:Init()
+
