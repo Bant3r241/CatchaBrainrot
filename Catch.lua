@@ -107,3 +107,11 @@ if game.PlaceId == 75418531859354 then
 end
 
 OrionLib:Init()
+
+local UIS = game:GetService("UserInputService")
+
+UIS.InputBegan:Connect(function(input, gp)
+    if not gp and input.KeyCode == Enum.KeyCode.G then
+        OrionLib:Toggle()
+    end
+end)
