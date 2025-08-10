@@ -1,24 +1,23 @@
--- Variables for UI elements
+-- GUI Setup
 local player = game.Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
 local screenGui = Instance.new("ScreenGui")
 screenGui.Parent = playerGui
 
--- Create main frame (holds the entire GUI)
+-- Main frame for the GUI
 local mainFrame = Instance.new("Frame")
-mainFrame.Size = UDim2.new(0.5, 0, 0.5, 0)
-mainFrame.Position = UDim2.new(0.25, 0, 0.25, 0)
+mainFrame.Size = UDim2.new(0.4, 0, 0.6, 0)
+mainFrame.Position = UDim2.new(0.3, 0, 0.2, 0)
 mainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 mainFrame.Parent = screenGui
 
--- Create tabs frame (for tab buttons)
+-- Tabs
 local tabsFrame = Instance.new("Frame")
 tabsFrame.Size = UDim2.new(1, 0, 0, 50)
 tabsFrame.Position = UDim2.new(0, 0, 0, 0)
 tabsFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
 tabsFrame.Parent = mainFrame
 
--- Tab buttons (Main and Misc)
 local mainTabButton = Instance.new("TextButton")
 mainTabButton.Size = UDim2.new(0.5, 0, 1, 0)
 mainTabButton.Position = UDim2.new(0, 0, 0, 0)
@@ -35,39 +34,63 @@ miscTabButton.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
 miscTabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 miscTabButton.Parent = tabsFrame
 
--- Create content frames for each tab
+-- Content for Main Tab
 local mainTabContent = Instance.new("Frame")
-mainTabContent.Size = UDim2.new(1, 0, 1, -50)  -- Fill the remaining space below tabs
+mainTabContent.Size = UDim2.new(1, 0, 1, -50)
 mainTabContent.Position = UDim2.new(0, 0, 0, 50)
 mainTabContent.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
-mainTabContent.Visible = true  -- Make the Main tab content visible initially
+mainTabContent.Visible = true
 mainTabContent.Parent = mainFrame
 
+-- Content for Misc Tab
 local miscTabContent = Instance.new("Frame")
 miscTabContent.Size = UDim2.new(1, 0, 1, -50)
 miscTabContent.Position = UDim2.new(0, 0, 0, 50)
 miscTabContent.BackgroundColor3 = Color3.fromRGB(120, 120, 120)
-miscTabContent.Visible = false  -- Hide the Misc tab content initially
+miscTabContent.Visible = false
 miscTabContent.Parent = mainFrame
 
--- Add some sample content to the tabs
-local mainLabel = Instance.new("TextLabel")
-mainLabel.Size = UDim2.new(0, 200, 0, 50)
-mainLabel.Position = UDim2.new(0.5, -100, 0.5, -25)
-mainLabel.Text = "Main Tab Content"
-mainLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-mainLabel.BackgroundTransparency = 1
-mainLabel.Parent = mainTabContent
+-- Example button for Main Tab (you can add more like this)
+local aimbotButton = Instance.new("TextButton")
+aimbotButton.Size = UDim2.new(1, 0, 0, 40)
+aimbotButton.Position = UDim2.new(0, 0, 0, 0)
+aimbotButton.Text = "Aimbot with Webslinger"
+aimbotButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+aimbotButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+aimbotButton.Parent = mainTabContent
 
-local miscLabel = Instance.new("TextLabel")
-miscLabel.Size = UDim2.new(0, 200, 0, 50)
-miscLabel.Position = UDim2.new(0.5, -100, 0.5, -25)
-miscLabel.Text = "Misc Tab Content"
-miscLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-miscLabel.BackgroundTransparency = 1
-miscLabel.Parent = miscTabContent
+-- Add more buttons in the same way for Main Tab...
 
--- Tab Button Click Functions
+-- Infinite Jump Toggle (Misc Tab)
+local infiniteJumpButton = Instance.new("TextButton")
+infiniteJumpButton.Size = UDim2.new(1, 0, 0, 40)
+infiniteJumpButton.Position = UDim2.new(0, 0, 0, 0)
+infiniteJumpButton.Text = "Infinite Jump"
+infiniteJumpButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+infiniteJumpButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+infiniteJumpButton.Parent = miscTabContent
+
+-- Toggle Infinite Jump functionality
+local infiniteJumpEnabled = false
+infiniteJumpButton.MouseButton1Click:Connect(function()
+    infiniteJumpEnabled = not infiniteJumpEnabled
+    if infiniteJumpEnabled then
+        infiniteJumpButton.Text = "Disable Infinite Jump"
+        -- Enable Infinite Jump (for example)
+        game:GetService("UserInputService").JumpRequest:Connect(function()
+            if infiniteJumpEnabled then
+                -- Prevent jumping from stopping (infinite jump logic)
+                game.Players.LocalPlayer.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Physics)
+                game.Players.LocalPlayer.Character.Humanoid:Move(Vector3.new(0, 50, 0)) -- Keeps jump upwards
+            end
+        end)
+    else
+        infiniteJumpButton.Text = "Enable Infinite Jump"
+        -- Disable Infinite Jump
+    end
+end)
+
+-- Tab Switching Logic
 local function showMainTab()
     mainTabContent.Visible = true
     miscTabContent.Visible = false
@@ -82,7 +105,7 @@ local function showMiscTab()
     miscTabButton.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
 end
 
--- Connect the tab buttons to their functions
+-- Connect buttons to their respective functions
 mainTabButton.MouseButton1Click:Connect(showMainTab)
 miscTabButton.MouseButton1Click:Connect(showMiscTab)
 
