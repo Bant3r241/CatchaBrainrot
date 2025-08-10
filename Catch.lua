@@ -17,7 +17,7 @@ if game.PlaceId == 75418531859354 then
     end
 
     local function FuseAll()
-        print("Fusing all with relic...")
+        game:GetService("ReplicatedStorage").Packages.Knit.Services.RelicService.RF.SubmitAll:InvokeServer()
     end
 
     local MainTab = Window:MakeTab({Name = "Main", Icon = "rbxassetid://4299432428", PremiumOnly = false})
