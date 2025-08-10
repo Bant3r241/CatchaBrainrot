@@ -3,10 +3,9 @@ if game.PlaceId == 75418531859354 then
     local Window = OrionLib:MakeWindow({Name="Xlur │ Catch A Brainrot",HidePremium=false,IntroEnabled=false,IntroText="Xlur",SaveConfig=true,ConfigFolder="XlurConfig"})
 
     _G.autoClaim,_G.FuseAll,_G.SellAll=false,false,false
-    _G.AutoBuySprout,_G.AutoBuySun,_G.AutoBuySpace=false,false,false
-    _G.AutoBuyFries,_G.AutoBuyBanana,_G.AutoBuyCheese,_G.AutoBuyWatermelon=false,false,false,false
-    _G.AutoBuyPineapple,_G.AutoBuyCupcake,_G.AutoBuyGold,_G.AutoBuyDiamond=false,false,false,false
-    _G.InfiniteJump,_G.ESP=false
+    _G.AutoBuyRelic=""
+    _G.AutoBuyBait=""
+    _G.InfiniteJump,_G.ESP=false,false
     _G.WalkSpeed=16
 
     function autoClaimTrap()
@@ -24,16 +23,16 @@ if game.PlaceId == 75418531859354 then
     function FuseAll() game:GetService("ReplicatedStorage").Packages.Knit.Services.RelicService.RF.SubmitAll:InvokeServer() end
     function SellAll() game:GetService("ReplicatedStorage").Packages.Knit.Services.SellService.RF.SellAll:InvokeServer() end
 
-    function AutoBuyRelic(name)
-        while _G["AutoBuy"..name] do
-            game:GetService("ReplicatedStorage").Packages.Knit.Services.RelicShopService.RF.Purchase:InvokeServer(name)
+    function AutoBuyRelicFunc()
+        while _G.AutoBuyRelic~="" do
+            game:GetService("ReplicatedStorage").Packages.Knit.Services.RelicShopService.RF.Purchase:InvokeServer(_G.AutoBuyRelic)
             wait(5)
         end
     end
 
-    function AutoBuyBait(name)
-        while _G["AutoBuy"..name] do
-            game:GetService("ReplicatedStorage").Packages.Knit.Services.BaitShopService.RF.Purchase:InvokeServer(name)
+    function AutoBuyBaitFunc()
+        while _G.AutoBuyBait~="" do
+            game:GetService("ReplicatedStorage").Packages.Knit.Services.BaitShopService.RF.Purchase:InvokeServer(_G.AutoBuyBait)
             wait(5)
         end
     end
@@ -44,14 +43,26 @@ if game.PlaceId == 75418531859354 then
     MainTab:AddToggle({Name="Sell All",Default=false,Callback=function(v) _G.SellAll=v if v then SellAll() end end})
 
     local RelicsTab=Window:MakeTab({Name="Relics",Icon="rbxassetid://4299432428",PremiumOnly=false})
-    RelicsTab:AddToggle({Name="Auto Buy Sprout",Default=false,Callback=function(v) _G.AutoBuySprout=v if v then AutoBuyRelic("Sprout") end end})
-    RelicsTab:AddToggle({Name="Auto Buy Sun",Default=false,Callback=function(v) _G.AutoBuySun=v if v then AutoBuyRelic("Sun") end end})
-    RelicsTab:AddToggle({Name="Auto Buy Space",Default=false,Callback=function(v) _G.AutoBuySpace=v if v then AutoBuyRelic("Space") end end})
+    RelicsTab:AddDropdown({
+        Name="Auto Buy Relic",
+        Default="None",
+        Options={"None","Sprout","Sun","Space"},
+        Callback=function(v)
+            _G.AutoBuyRelic = (v=="None") and "" or v
+            if _G.AutoBuyRelic ~= "" then coroutine.wrap(AutoBuyRelicFunc)() end
+        end
+    })
 
     local BaitTab=Window:MakeTab({Name="Bait",Icon="rbxassetid://4299432428",PremiumOnly=false})
-    for _,bait in pairs({"Fries","Banana","Cheese","Watermelon","Pineapple","Cupcake","Gold","Diamond"}) do
-        BaitTab:AddToggle({Name="Auto Buy "..bait,Default=false,Callback=function(v) _G["AutoBuy"..bait]=v if v then AutoBuyBait(bait) end end})
-    end
+    BaitTab:AddDropdown({
+        Name="Auto Buy Bait",
+        Default="None",
+        Options={"None","Fries","Banana","Cheese","Watermelon","Pineapple","Cupcake","Gold","Diamond"},
+        Callback=function(v)
+            _G.AutoBuyBait = (v=="None") and "" or v
+            if _G.AutoBuyBait ~= "" then coroutine.wrap(AutoBuyBaitFunc)() end
+        end
+    })
 
     local MiscTab=Window:MakeTab({Name="Misc",Icon="rbxassetid://4299432428",PremiumOnly=false})
     MiscTab:AddToggle({Name="Infinite Jump",Default=false,Callback=function(v) 
