@@ -13,13 +13,16 @@ if game.PlaceId == 75418531859354 then
 
     local function autoClaimTrap()
         while _G.autoClaim do
-            game:GetService("ReplicatedStorage").Packages.Knit.Services.TrapService.RF.Reveal:InvokeServer("Trap3")
-            print("Trap Revealed!")
+            for i = 1, 12 do
+                local trapName = "Trap" .. i
+                game:GetService("ReplicatedStorage").Packages.Knit.Services.TrapService.RF.Reveal:InvokeServer(trapName)
+                print(trapName .. " Revealed!")
 
-            game:GetService("ReplicatedStorage").Packages.Knit.Services.TrapService.RF.Claim:InvokeServer("Trap3")
-            print("Trap Claimed!")
+                game:GetService("ReplicatedStorage").Packages.Knit.Services.TrapService.RF.Claim:InvokeServer(trapName)
+                print(trapName .. " Claimed!")
 
-            wait(1)
+                wait(1)
+            end
         end
     end
 
