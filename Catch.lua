@@ -1,94 +1,93 @@
--- Create the ScreenGui
+local player = game.Players.LocalPlayer
 local screenGui = Instance.new("ScreenGui")
-screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+screenGui.Parent = player:WaitForChild("PlayerGui")
 
--- Create the main frame (background with transparency)
+-- Create main frame (black background)
 local mainFrame = Instance.new("Frame")
-mainFrame.Size = UDim2.new(0.6, 0, 0.8, 0)  -- Adjust size to 60% width and 80% height of the screen
-mainFrame.Position = UDim2.new(0.2, 0, 0.1, 0)  -- Center the frame
+mainFrame.Size = UDim2.new(0, 200, 0, 400)
+mainFrame.Position = UDim2.new(0, 0, 0, 0)
 mainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-mainFrame.BackgroundTransparency = 0.5  -- Make it semi-transparent
-mainFrame.BorderSizePixel = 0
 mainFrame.Parent = screenGui
 
--- Create the side menu frame (vertical menu)
-local sideMenu = Instance.new("Frame")
-sideMenu.Size = UDim2.new(0, 100, 1, 0)  -- Adjust the side menu size to fit mobile screens better
-sideMenu.Position = UDim2.new(0, 0, 0, 0)
-sideMenu.BackgroundColor3 = Color3.fromRGB(30, 30, 30)  -- Dark color for the menu
-sideMenu.BackgroundTransparency = 0.6
-sideMenu.BorderSizePixel = 0
-sideMenu.Parent = mainFrame
+-- Create tabs container
+local tabContainer = Instance.new("Frame")
+tabContainer.Size = UDim2.new(1, 0, 0, 50)
+tabContainer.Position = UDim2.new(0, 0, 0, 0)
+tabContainer.BackgroundTransparency = 1
+tabContainer.Parent = mainFrame
 
--- Create a list of tabs for the menu
-local tabs = {"Discord Tab", "Brainrot Management", "Player Management", "Player Tab"}
-local tabButtons = {}
+-- Create Tab buttons
+local mainTabButton = Instance.new("TextButton")
+mainTabButton.Size = UDim2.new(0.5, 0, 1, 0)
+mainTabButton.Text = "Main"
+mainTabButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+mainTabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+mainTabButton.Parent = tabContainer
 
-for i, tab in ipairs(tabs) do
-    local button = Instance.new("TextButton")
-    button.Size = UDim2.new(1, 0, 0, 40)  -- Adjust size as needed
-    button.Position = UDim2.new(0, 0, 0, (i-1) * 40)
-    button.Text = tab
-    button.TextColor3 = Color3.fromRGB(255, 255, 255)
-    button.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-    button.BackgroundTransparency = 0.6
-    button.BorderSizePixel = 0
-    button.Font = Enum.Font.GothamBold
-    button.TextSize = 16
-    button.Parent = sideMenu
-    table.insert(tabButtons, button)
+local miscTabButton = Instance.new("TextButton")
+miscTabButton.Size = UDim2.new(0.5, 0, 1, 0)
+miscTabButton.Position = UDim2.new(0.5, 0, 0, 0)
+miscTabButton.Text = "Misc"
+miscTabButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+miscTabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+miscTabButton.Parent = tabContainer
+
+-- Create pages (Main and Misc)
+local mainPage = Instance.new("Frame")
+mainPage.Size = UDim2.new(1, 0, 1, -50) -- fill remaining space
+mainPage.Position = UDim2.new(0, 0, 0, 50)
+mainPage.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+mainPage.Visible = true
+mainPage.Parent = mainFrame
+
+local miscPage = Instance.new("Frame")
+miscPage.Size = UDim2.new(1, 0, 1, -50)
+miscPage.Position = UDim2.new(0, 0, 0, 50)
+miscPage.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+miscPage.Visible = false
+miscPage.Parent = mainFrame
+
+-- Switch between tabs
+mainTabButton.MouseButton1Click:Connect(function()
+    mainPage.Visible = true
+    miscPage.Visible = false
+end)
+
+miscTabButton.MouseButton1Click:Connect(function()
+    mainPage.Visible = false
+    miscPage.Visible = true
+end)
+
+-- Make GUI movable
+local dragging = false
+local dragStart = nil
+local startPos = nil
+
+-- Function to update position while dragging
+local function updatePosition(input)
+    local delta = input.Position - dragStart
+    mainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
 end
 
--- Create the content frame for toggles (right side of the UI)
-local contentFrame = Instance.new("Frame")
-contentFrame.Size = UDim2.new(1, -100, 1, 0)
-contentFrame.Position = UDim2.new(0, 100, 0, 0)
-contentFrame.BackgroundTransparency = 1  -- Transparent background
-contentFrame.Parent = mainFrame
+-- Detect when the user starts dragging
+tabContainer.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        dragStart = input.Position
+        startPos = mainFrame.Position
+    end
+end)
 
--- Create toggles for features
-local toggleLabels = {"Aimbot with Webslinger", "Anti Traps", "Anti Hit", "Speed Boost req", "Jump Power", "Jump Power Strength"}
-local toggles = {}
+-- Detect when the user stops dragging
+tabContainer.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = false
+    end
+end)
 
-for i, label in ipairs(toggleLabels) do
-    local toggleFrame = Instance.new("Frame")
-    toggleFrame.Size = UDim2.new(1, 0, 0, 40)
-    toggleFrame.Position = UDim2.new(0, 0, 0, (i-1) * 50)
-    toggleFrame.BackgroundTransparency = 0.5
-    toggleFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-    toggleFrame.BorderSizePixel = 0
-    toggleFrame.Parent = contentFrame
-
-    local toggleLabel = Instance.new("TextLabel")
-    toggleLabel.Size = UDim2.new(0, 180, 1, 0)
-    toggleLabel.Position = UDim2.new(0, 10, 0, 0)
-    toggleLabel.Text = label
-    toggleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-    toggleLabel.BackgroundTransparency = 1
-    toggleLabel.Font = Enum.Font.Gotham
-    toggleLabel.TextSize = 14
-    toggleLabel.Parent = toggleFrame
-
-    local toggleSwitch = Instance.new("TextButton")
-    toggleSwitch.Size = UDim2.new(0, 40, 0, 20)
-    toggleSwitch.Position = UDim2.new(1, -50, 0, 10)
-    toggleSwitch.Text = "OFF"
-    toggleSwitch.TextColor3 = Color3.fromRGB(255, 255, 255)
-    toggleSwitch.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-    toggleSwitch.BackgroundTransparency = 0.5
-    toggleSwitch.BorderSizePixel = 0
-    toggleSwitch.Font = Enum.Font.Gotham
-    toggleSwitch.TextSize = 12
-    toggleSwitch.Parent = toggleFrame
-
-    -- Toggle switch functionality
-    toggleSwitch.MouseButton1Click:Connect(function()
-        if toggleSwitch.Text == "OFF" then
-            toggleSwitch.Text = "ON"
-            toggleSwitch.BackgroundColor3 = Color3.fromRGB(0, 255, 0)  -- Green for ON
-        else
-            toggleSwitch.Text = "OFF"
-            toggleSwitch.BackgroundColor3 = Color3.fromRGB(255, 0, 0)  -- Red for OFF
-        end
-    end)
-end
+-- Update the position as the user drags
+game:GetService("UserInputService").InputChanged:Connect(function(input)
+    if dragging then
+        updatePosition(input)
+    end
+end)
